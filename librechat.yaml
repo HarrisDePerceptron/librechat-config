@@ -207,6 +207,38 @@ endpoints:
       summaryModel: "current_model"
       forcePrompt: false
       modelDisplayLabel: "Ollama"
+
+    - name: "llamacpp"
+        # llama-server is OpenAI-compatible; it doesn't need a real key unless you start it with --api-key
+      apiKey: "sk-local-anything"
+      # IMPORTANT: if LibreChat runs in Docker and llama-server runs on your host, use host.docker.internal
+      baseURL: "http://host.docker.internal:8080/v1"
+
+      # models shown in the dropdown
+      models:
+        default: [
+           "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_XL"
+        ]
+        fetch: false
+
+      # nice label in the UI
+      modelDisplayLabel: "Qwen3-Coder-30B (llama.cpp)"
+
+      # default params (mirror your CLI flags)
+      addParams:
+        temperature: 0.7
+        top_p: 0.8
+        top_k: 20
+        min_p: 0.0
+        repeat_penalty: 1.05
+        # ctx (“-c/--ctx-size” on server) is set per model/slot on llama.cpp; LibreChat will send max_tokens, not ctx.
+        # If you want a default token cap in UI, set it per message; server still enforces its own context size.
+
+      # drop params many OpenAI UIs send that llama.cpp doesn't use
+      dropParams: ["frequency_penalty", "presence_penalty", "logit_bias"]
+
+      # optional: have LibreChat title conversations with this model (or leave false)
+      titleConvo: true
 # fileConfig:
 #   endpoints:
 #     assistants:
